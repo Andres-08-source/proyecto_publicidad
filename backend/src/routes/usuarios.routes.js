@@ -17,17 +17,17 @@ router.get("/usuarios", async (req, res) => {
 // Ruta para agregar un nuevo usuario
 router.post("/usuarios", async (req, res) => {
     try {
-      const { nombre, correo } = req.body; // Extraemos los datos del cuerpo de la petición
+      const { nombre, correo, contraseña } = req.body; // Extraemos los datos del cuerpo de la petición
   
       // Verificamos que se envíen ambos datos
-      if (!nombre || !correo) {
-        return res.status(400).json({ error: "Nombre y correo son obligatorios" });
+      if (!nombre || !correo || !contraseña) {
+        return res.status(400).json({ error: "Nombre, correo y contraseña son obligatorios" });
       }
   
       // Insertamos el usuario en la base de datos
       const result = await pool.query(
-        "INSERT INTO usuarios (nombre, correo) VALUES ($1, $2) RETURNING *",
-        [nombre, correo]
+        "INSERT INTO usuarios (nombre, correo, contraseña) VALUES ($1, $2, $3) RETURNING *",
+        [nombre, correo, contraseña]
       );
   
       res.status(201).json(result.rows[0]); // Enviamos el usuario creado como respuesta
